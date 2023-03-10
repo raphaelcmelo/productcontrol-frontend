@@ -29,6 +29,25 @@ const getSales = async () => {
     }
 }
 
+const removeSale = async (id) => {
+  setLoading(true)
+  const message = confirm("Tem certeza que deseja remover esta compra?")
+  try {
+    if(message){
+    await api.delete(`/sales/${id}`, {
+      headers: {
+        Authorization: `Bearer ${session.token}`,
+      },
+    });
+    getSales();
+  }
+    setLoading(false);
+} catch (error) {
+  alert("Não foi possível excluir a compra")
+  setLoading(false);
+}
+}
+
   useEffect(() => {
     getSales()
   }, [] )
@@ -79,7 +98,7 @@ const convertValue = (value) => {
                   <td>
                   <SessionBtns>
                     <Button label="Editar" variant="btn-success" onClick={() => navigate("/sales/create", { state: { id: data.id }})}/>
-                    <Button label="Excluir" variant="btn-danger" onClick={() => removeUser(data.id)} />
+                    <Button label="Excluir" variant="btn-danger" onClick={() => removeSale(data.id)} />
                 </SessionBtns>
                   </td>
                 </tr>

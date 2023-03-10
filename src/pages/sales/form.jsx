@@ -36,7 +36,7 @@ const Form = () => {
 
   useEffect(() => {
     const total = productvalue * unity;
-    setValue("total_money_purchase", total);
+    setValue("total_money_purchase", total.toFixed(2));
   }, [productvalue, unity, setValue]);
 
   const save = async (data) => {
