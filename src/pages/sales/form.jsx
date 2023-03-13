@@ -4,14 +4,16 @@ import {SessionBtns} from "./styles";
 import { useForm} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import api from "../../services/api";
+import moment from 'moment';
 
 
 const Form = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const schema = yup.object({
     product: yup.string().required("Campo obrigatório"),
     date_purchase: yup.string().required("Campo obrigatório"),
@@ -39,20 +41,57 @@ const Form = () => {
     setValue("total_money_purchase", total.toFixed(2));
   }, [productvalue, unity, setValue]);
 
-  const save = async (data) => {
-    setLoading(true)
-    try {
-      data.productvalue_purchase = parseFloat(data.productvalue_purchase.replace(",", "."));
-      data.unity_purchase = parseFloat(data.unity_purchase.replace(",", "."));
-      data.total_money_purchase = parseFloat(data.total_money_purchase.replace(",", "."));
-      data.date_purchase = new Date(data.date_purchase.replace(",", "."));
+  const getById =  async () => {
+    setLoading(true);
 
-      await api.post("/sales", data,{
+    try {
+      const response = await api.get(`/sales/${location?.state?.id}`, {
         headers: {
           Authorization: `Bearer ${session.token}`,
         },
       });
-      alert("Compra criada com sucesso!")
+      setValue("product", response?.data?.product);
+      setValue("date_purchase", moment(response?.data?.date_purchase).format("yyyy-MM-DD"));
+      setValue("unity_purchase", response?.data?.unity_purchase);
+      setValue("productvalue_purchase", response?.data?.productvalue_purchase);
+      setValue("total_money_purchase", response?.data?.total_money_purchase);
+
+    } catch (error) {
+      setLoading(false)
+      alert("Não foi possível carregar a compra!")
+    }
+  }
+
+  useEffect(() => {
+    if (location?.state?.id){
+      getById();
+    }
+  }, [])
+
+  const save = async (data) => {
+    setLoading(true)
+
+    try {
+      data.productvalue_purchase = parseFloat(data.productvalue_purchase.replace(",", "."));
+      data.unity_purchase = parseFloat(data.unity_purchase.replace(",", "."));
+      data.total_money_purchase = parseFloat(data.total_money_purchase.replace(",", "."));
+      data.date_purchase = new Date(data.date_purchase);
+
+      if(!location?.state?.id) {
+        await api.post("/sales", data,{
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+        });
+        alert("Compra criada com sucesso!")
+      } else {
+        await api.put(`/sales/${location?.state?.id}`, data,{
+          headers: {
+            Authorization: `Bearer ${session.token}`,
+          },
+        });
+        alert("Compra editada com sucesso!")
+      }
       setLoading(false);
       navigate("/sales");
     } catch (error) {

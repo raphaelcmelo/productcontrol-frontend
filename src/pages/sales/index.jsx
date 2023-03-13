@@ -28,6 +28,18 @@ const getSales = async () => {
     }
 }
 
+useEffect(() => {
+  getSales()
+}, [] );
+
+const convertValue = (value) => {
+  const convert = value.toLocaleString("pt-br", {
+    style: "currency",
+    currency: "BRL"
+  })
+  return convert;
+}
+
 const removeSale = async (id) => {
   setLoading(true);
   const message = confirm("Tem certeza que deseja remover esta compra?");
@@ -38,29 +50,13 @@ const removeSale = async (id) => {
         Authorization: `Bearer ${session.token}`,
       },
     });
+    getSales();
   }
   setLoading(false);
-  getSales();
 } catch (error) {
   alert("Não foi possível excluir a compra")
   setLoading(false);
 }
-}
-
-  useEffect(() => {
-    getSales()
-  }, [] );
-
-  // useEffect(() => {
-  //   console.log(sales)
-  // }, [sales])
-
-const convertValue = (value) => {
-  const convert = value.toLocaleString("pt-br", {
-    style: "currency",
-    currency: "BRL"
-  })
-  return convert;
 }
 
   return (
