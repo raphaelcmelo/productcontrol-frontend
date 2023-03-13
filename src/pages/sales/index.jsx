@@ -79,8 +79,8 @@ const convertValue = (value) => {
                 <th>ID</th>
                 <th>Produto</th>
                 <th>Data de compra</th>
-                <th>Valor</th>
                 <th>Quantidade</th>
+                <th>Valor</th>
                 <th>Valor Total</th>
                 <th>Ações</th>
               </tr>
@@ -88,12 +88,12 @@ const convertValue = (value) => {
             <tbody>
               {sales?.length ? 
               sales.map((data, index) =>
-                <tr key="index">
+                <tr key={index}>
                   <td>{data.id}</td>
                   <td>{data.product}</td>
                   <td>{moment(data.date_purchase).format("DD/MM/YYYY hh:mm:ss")}</td>
-                  <td>{convertValue(data.productvalue_purchase)}</td>
                   <td>{data.unity_purchase}</td>
+                  <td>{convertValue(data.productvalue_purchase)}</td>
                   <td>{convertValue(data.total_money_purchase)}</td>
                   <td>
                   <SessionBtns>

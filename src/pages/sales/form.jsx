@@ -78,12 +78,12 @@ const Form = () => {
             </div>
             <div className='row'style={{marginBottom: 15}}>
               <div className='col'>
-                <Input {...register("productvalue_purchase")} label="Valor da unidade (R$)" placeholder="Digite o valor unitário" type="number" step="any"/>
-                {errors?.productvalue_purchase && <Text color="#ff0000">{errors.productvalue_purchase?.message}</Text>}
-              </div>
               <div className='col'>
                 <Input {...register("unity_purchase")} label="Quantidade" type="number" step="any"/>
                 {errors?.unity_purchase && <Text color="#ff0000">{errors.unity_purchase?.message}</Text>}
+              </div>
+                <Input {...register("productvalue_purchase")} label="Valor da unidade (R$)" placeholder="Digite o valor unitário" type="number" step="any"/>
+                {errors?.productvalue_purchase && <Text color="#ff0000">{errors.productvalue_purchase?.message}</Text>}
               </div>
               <div className='col'>
                 <Input {...register("total_money_purchase")} label="Valor total" type="number" readOnly step="any"/>
