@@ -105,7 +105,6 @@ const convertValue = (value) => {
               ) 
               : null}
               <tr>
-                <td></td>
               </tr>
             </tbody>
           </table>
