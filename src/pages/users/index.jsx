@@ -55,7 +55,10 @@ const Users = () => {
     <>
       <Content>
         <BodyBtn>
-          <Button label="Criar Usuário" variant="btn-primary" onClick={() => navigate("/users/create") }/>
+          <Button
+            label="Criar Usuário"
+            variant="btn-primary"
+            onClick={() => navigate("/users/create") }/>
         </BodyBtn>
         {loading && <Loading />}
         {!loading &&
@@ -73,10 +76,10 @@ const Users = () => {
             {users?.length ?
               users.map((data, index) =>
             <tr key={index}>
-              <th>{data.id}</th>
-              <th>{data.name}</th>
-              <th>{data.email}</th>
-              <th>{data.cpf}</th>
+              <td>{data.id}</td>
+              <td>{data.name}</td>
+              <td>{data.email}</td>
+              <td>{data.cpf}</td>
               <td>
                 <SessionBtns>
                   <Button label="Editar" variant="btn-success" onClick={() => navigate("/users/form", { state: { id: data.id }})}/>

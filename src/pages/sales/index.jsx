@@ -1,20 +1,19 @@
-import { useEffect, useState } from "react";
 import { Content, Button, Loading } from "../../components";
 import { BodyBtn, SessionBtns }  from "./styles";
 import api from "../../services/api";
-import moment from "moment";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const Sales = () => {
 
-const [loading, setLoading] = useState(false);
-const session = JSON.parse(localStorage.getItem("cripto"));
-const [sales, setSales] = useState([]);
-const navigate = useNavigate();
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const session = JSON.parse(localStorage.getItem("cripto"));
 
 const getSales = async () => {
     setLoading(true);
-
     try {
       const response = await api.get("/sales", {
         headers: {
@@ -22,7 +21,7 @@ const getSales = async () => {
         },
       });
       setSales(response?.data);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       alert("Não foi possível carregar as compras!")
       setLoading(false)
@@ -30,8 +29,8 @@ const getSales = async () => {
 }
 
 const removeSale = async (id) => {
-  setLoading(true)
-  const message = confirm("Tem certeza que deseja remover esta compra?")
+  setLoading(true);
+  const message = confirm("Tem certeza que deseja remover esta compra?");
   try {
     if(message){
     await api.delete(`/sales/${id}`, {
@@ -39,9 +38,9 @@ const removeSale = async (id) => {
         Authorization: `Bearer ${session.token}`,
       },
     });
-    getSales();
   }
-    setLoading(false);
+  setLoading(false);
+  getSales();
 } catch (error) {
   alert("Não foi possível excluir a compra")
   setLoading(false);
@@ -50,7 +49,7 @@ const removeSale = async (id) => {
 
   useEffect(() => {
     getSales()
-  }, [] )
+  }, [] );
 
   // useEffect(() => {
   //   console.log(sales)
@@ -61,10 +60,11 @@ const convertValue = (value) => {
     style: "currency",
     currency: "BRL"
   })
-  return convert
+  return convert;
 }
 
   return (
+    <>
       <Content>
         <BodyBtn>
           <Button
@@ -73,6 +73,8 @@ const convertValue = (value) => {
             onClick={() => navigate("/sales/form")}
             />
           </BodyBtn>
+          {loading && <Loading />}
+          {!loading &&
           <table className="table">
             <thead>
               <tr>
@@ -87,7 +89,7 @@ const convertValue = (value) => {
             </thead>
             <tbody>
               {sales?.length ? 
-              sales.map((data, index) =>
+              sales.map((data, index) => 
                 <tr key={index}>
                   <td>{data.id}</td>
                   <td>{data.product}</td>
@@ -97,18 +99,17 @@ const convertValue = (value) => {
                   <td>{convertValue(data.total_money_purchase)}</td>
                   <td>
                   <SessionBtns>
-                    <Button label="Editar" variant="btn-success" onClick={() => navigate("/sales/create", { state: { id: data.id }})}/>
+                    <Button label="Editar" variant="btn-success" onClick={() => navigate("/sales/form", { state: { id: data.id }})}/>
                     <Button label="Excluir" variant="btn-danger" onClick={() => removeSale(data.id)} />
                 </SessionBtns>
                   </td>
                 </tr>
               ) 
               : null}
-              <tr>
-              </tr>
             </tbody>
-          </table>
+          </table>}
       </Content>
+    </>
     )
 }
 
