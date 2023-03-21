@@ -33,11 +33,14 @@ useEffect(() => {
 }, [] );
 
 const convertValue = (value) => {
+  if (value) {
   const convert = value.toLocaleString("pt-br", {
     style: "currency",
     currency: "BRL"
-  })
+  });
   return convert;
+  }
+  return '';
 }
 
 const removeSale = async (id) => {
